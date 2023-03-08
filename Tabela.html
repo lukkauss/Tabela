@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tabela de Classificação de Alunos</title>
+    <!-- Formulário para adicionar novos alunos -->
+	<form>
+		<label for="nome">Nome:</label>
+		<input type="text" id="nome" name="nome"><br><br>
+		
+		<label for="pontos">Pontos:</label>
+		<input type="number" id="pontos" name="pontos"><br><br>
+		
+		<input type="submit" value="Adicionar Aluno">
+	</form>
+    <script>
+		function adicionarAluno() {
+			// Obter os valores dos campos do formulário
+			var nome = document.getElementById("nome").value;
+			var pontos = document.getElementById("pontos").value;
+
+			// Criar uma nova linha para a tabela com os valores inseridos
+			var novaLinha = "<tr><td></td><td>" + nome + "</td><td>" + pontos + "</td></tr>";
+
+			// Adicionar a nova linha à tabela
+			document.getElementById("tabela-alunos").innerHTML += novaLinha;
+
+			// Atualizar as posições na tabela
+			atualizarPosicoes();
+		}
+
+		function atualizarPosicoes() {
+			// Obter todas as linhas da tabela
+			var linhas = document.querySelectorAll("#tabela-alunos tbody tr");
+
+			// Ordenar as linhas de acordo com a quantidade de pontos (ordem decrescente)
+			var linhasOrdenadas = Array.from(linhas).sort(function(a, b) {
+				var pontosA = parseInt(a.querySelector("td:nth-of-type(2)").textContent);
+				var pontosB = parseInt(b.querySelector("td:nth-of-type(2)").textContent);
+				return pontosB - pontosA;
+			});
+
+			// Atualizar as posições na tabela
+			linhasOrdenadas.forEach(function(linha, index) {
+				linha.querySelector("td:nth-of-type(1)").textContent = index + 1;
+			});
+		}
+	</script>
+</head>
+<body>
+	<h1>Tabela de Classificação de Alunos</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Posição</th>
+				<th>Nome</th>
+				<th>Pontos</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>1</td>
+				<td>João</td>
+				<td>95</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>Maria</td>
+				<td>89</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>Lucas</td>
+				<td>86</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>Ana</td>
+				<td>78</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>Pedro</td>
+				<td>72</td>
+			</tr>
+		</tbody>
+	</table>
+	<script>
+		// Obter a tabela de classificação e a lista de alunos
+		var tbody = document.querySelector('table tbody');
+		var alunos = [];
+		for (var i = 0; i < tbody.children.length; i++) {
+			var tr = tbody.children[i];
+			var nome = tr.children[1].textContent;
+			var pontos = parseInt(tr.children[2].textContent);
+			alunos.push({nome: nome, pontos: pontos});
+		}
+        // Event listener para o formulário de adicionar aluno
+		document.querySelector('form').addEventListener('submit', function(e) {
+			e.preventDefault(); // Evita o recarregamento da página ao enviar o formulário
+			
+			// Obter os valores do nome e da pontuação do aluno
+			var nome = document.getElementById('nome').value;
+			var pontos = document.getElementById('pontos').value;
+            // Adicionar o novo aluno à lista de alunos e ordenar a lista em ordem decrescente de pontos
+			alunos.push({nome: nome, pontos: pontos});
+			alunos.sort(function(a, b) {
+				return b.pontos - a.pontos;
+			});
+			
+			// Adicionar uma nova linha à tabela de classificação
+			var tbody = document.querySelector('table tbody');
+			var posicao = tbody.children.length + 1;
+			var tr = document.createElement('tr');
+			tr.innerHTML = '<td>' + posicao + '</td><td>' + nome + '</td><td>' + pontos + '</td>';
+			tbody.appendChild(tr);
+			
+			// Limpar os campos do formulário
+			document.getElementById('nome').value = '';
+			document.getElementById('pontos').value = '';
+
+		});
+	</script>
+</body>
+</html>
